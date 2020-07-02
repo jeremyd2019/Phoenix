@@ -40,6 +40,24 @@ New and improved in this release:
 
 * Added orientation parameter to UltimateListControl.GetScrollPos. (PR#1632)
 
+* wx.lib.agw.aui.AuiNotebook RemovePage() now hides the removed page, so it
+  needs to be shown again if it is reused in another place. (PR#1668)
+
+* Fixed issue that could modify `bytes` objects under Python. (PR#1680)
+
+* Added wx.lib.agw.aui.EVT_AUI_PANE_CLOSE event which is sent when a AUI (the
+  agw version) Pane has been closed (after it has been closed, not when it is
+  about to be closed, which is when EVT_AUI_PANE_CLOSE is sent.) (PR#1628)
+
+* Exposed the wx.DC methods GetGraphicsContext and SetGraphicsContext. Depending
+  on the platform and the type of the DC, there may be a wx.GraphicsContext used
+  for the implementation of the DC. If so, the GetGraphicsContext method enables
+  access to it. Be sure to check that the return value is not None before trying
+  to use it.
+
+* Simplified the implementation of the wx.App.InitLocale method. See the
+  MigrationGuide for more information.
+
 
 
 
@@ -132,7 +150,13 @@ New and improved in this release:
   can be used even on the platforms that have a native version. Note that due to
   internal changes to support both types of animations, some API changes in how
   the Animation objects are created. See the AnimationCtrl.py sample in the demo
-  for the various usage patterns (#1579)
+  for the various usage patterns. (#1579)
+
+* DataViewModel.HasValue can be overridden and will inform the DataViewCtrl
+  whether or not an item and column has data. If HasValue returns False, then
+  GetValue for that item/col will not be called. This allows a distinction
+  between a truely empty cell, and one that has a value even if it is an empty
+  string. (#1600)
 
 * Added wrappers for the wx.grid.GridBlockCoords, wx.grid.GridBlocks, and
   wx.grid.GridBlockDiffResult classes, as well as associated new methods in the

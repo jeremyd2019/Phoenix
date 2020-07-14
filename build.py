@@ -774,23 +774,24 @@ def checkCompiler(quiet=False):
         # Now get the environment variables which that compiler needs from
         # its vcvarsall.bat command and load them into this process's
         # environment.
-        cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
-              "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
-              "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
-              "print(env)"
-        env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
+        if 'DISTUTILS_USE_SDK' not in os.environ:
+            cmd = "import setuptools, distutils.msvc9compiler as msvc; " \
+                  "arch = msvc.PLAT_TO_VCVARS[msvc.get_platform()]; " \
+                  "env = msvc.query_vcvarsall(msvc.VERSION, arch); " \
+                  "print(env)"
+            env = eval(runcmd('"%s" -c "%s"' % (PYTHON, cmd), getOutput=True, echoCmd=False))
 
-        def _b(v):
-            return str(v)
-            #if PY2:
-            #    return bytes(v)
-            #else:
-            #    return bytes(v, 'utf8')
+            def _b(v):
+                return str(v)
+                #if PY2:
+                #    return bytes(v)
+                #else:
+                #    return bytes(v, 'utf8')
 
-        os.environ['PATH'] = _b(env['path'])
-        os.environ['INCLUDE'] = _b(env['include'])
-        os.environ['LIB'] = _b(env['lib'])
-        os.environ['LIBPATH'] = _b(env['libpath'])
+            os.environ['PATH'] = _b(env['path'])
+            os.environ['INCLUDE'] = _b(env['include'])
+            os.environ['LIB'] = _b(env['lib'])
+            os.environ['LIBPATH'] = _b(env['libpath'])
 
     # NOTE: SIP is now generating code with scoped-enums. Older linux
     # platforms like what we're using for builds, and also TravisCI for

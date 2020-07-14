@@ -95,6 +95,8 @@ def configure(conf):
 
         conf.env['MSVC_VERSIONS'] = ['msvc ' + msvc_version]
         conf.env['MSVC_TARGETS'] = [conf.options.msvc_arch]
+        if 'DISTUTILS_USE_SDK' in os.environ:
+            conf.env['NO_MSVC_DETECT'] = 1
         conf.load('msvc')
     else:
         conf.load('compiler_c compiler_cxx')

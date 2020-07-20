@@ -48,7 +48,7 @@ class PythonTemplates:
 import wx
 import wx.xrc as xrc
 
-__res = None
+__res = None # type: xrc.XmlResource
 
 def get_resources():
     \"\"\" This function provides access to the XML resources in this module.\"\"\"
@@ -102,7 +102,7 @@ class %(subclass)s(wx.%(windowClass)s):
 """
 
     CREATE_WIDGET_VAR = """\
-        self.%(widgetName)s = xrc.XRCCTRL(self, \"%(widgetName)s\")
+        self.%(widgetName)s = xrc.XRCCTRL(self, \"%(widgetName)s\") # type: %(widgetClassFull)s
 """
 
     FRAME_MENUBAR_VAR = """\
@@ -469,6 +469,7 @@ class XmlResourceCompiler:
         for widget in topWindow.getElementsByTagName("object"):
             if not self.CheckAssignVar(widget): continue
             widgetClass = widget.getAttribute("class")
+            widgetClassFull = re.sub(r"^wx(?!\.)", "wx.", widgetClass)
             widgetClass = re.sub("^wx", "", widgetClass)
             widgetName = widget.getAttribute("name")
             if widgetName != "" and widgetClass != "":
